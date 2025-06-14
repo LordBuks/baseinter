@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, MapPin, User } from 'lucide-react';
 import './AthleteCard.css';
-import CardTemplate from '../../assets/card_template.png'; // Importa a imagem do template
 
 const AthleteCard = ({ athlete, onCardClick }) => {
   const [imageError, setImageError] = useState(false);
@@ -17,35 +16,69 @@ const AthleteCard = ({ athlete, onCardClick }) => {
     return Math.round((comportamento + compromisso + escola) / 3);
   };
 
+  // Extrair apenas o primeiro nome
+  const getFirstName = (fullName) => {
+    if (!fullName) return 'Nome não informado';
+    return fullName.split(' ')[0];
+  };
+
   return (
-    <div className="athlete-card card-3d animate-fade-scale" onClick={() => onCardClick(athlete)}>
-      <img src={CardTemplate} alt="Card Template" className="card-template-bg" />
-      <div className="card-content-overlay">
-        <div className="athlete-photo-container-overlay">
+    <div className="athlete-card-modern" onClick={() => onCardClick(athlete)}>
+      <div className="card-background">
+        {/* Header com logo do Internacional */}
+        <div className="card-header-modern">
+          <div className="inter-logo-small">SC</div>
+          <div className="gigante-text">GIGANTE</div>
+        </div>
+        
+        {/* Área da foto */}
+        <div className="photo-area">
           {athlete.photo && !imageError ? (
             <img 
               src={athlete.photo} 
               alt={athlete.name}
-              className="athlete-photo-overlay"
+              className="athlete-photo-modern"
               onError={() => setImageError(true)}
             />
           ) : (
-            <div className="athlete-photo-placeholder-overlay">
-              <User size={40} />
+            <div className="photo-placeholder-modern">
+              <span>FOTO AQUI</span>
             </div>
           )}
         </div>
         
-        <div className="athlete-name-overlay">{athlete.name || 'NOME AQUI'}</div>
+        {/* Área do nome */}
+        <div className="name-area">
+          <div className="name-background">
+            <span className="athlete-name-modern">{getFirstName(athlete.name)}</span>
+          </div>
+        </div>
         
-        <div className="position-overlay">{athlete.position || 'POSIÇÃO AQUI'}</div>
+        {/* Área da posição */}
+        <div className="position-area">
+          <div className="position-background">
+            <span className="position-text">{athlete.position || 'POSIÇÃO AQUI'}</span>
+          </div>
+        </div>
         
-        <div className="birthdate-overlay">{formatDate(athlete.birthDate) || 'DATA DE NASCIMENTO AQUI'}</div>
+        {/* Logo do Internacional */}
+        <div className="inter-logo-main">
+          <div className="logo-circle">
+            <span className="logo-text">SC INTERNACIONAL</span>
+            <span className="logo-year">1909</span>
+          </div>
+        </div>
+        
+        {/* Data de nascimento */}
+        <div className="birth-date-area">
+          <span className="birth-date-text">
+            {formatDate(athlete.birthDate) || 'DATA DE NASCIMENTO AQUI'}
+          </span>
+        </div>
       </div>
     </div>
   );
 };
 
 export default AthleteCard;
-
 

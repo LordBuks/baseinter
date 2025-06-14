@@ -15,7 +15,7 @@ export const AthleteProvider = ({ children }) => {
     const defaultAthletesState = {
       'Turno Manhã - Escola São Francisco': [],
       'Turno Manhã - Escola Estadual Padre Léo': [],
-      'Turno Noite - Escola Professor Estadual de Educação Básica Gentil Viegas Cardoso': [],
+      'Turno Noite - Escola Estadual de Educação Básica Professor Gentil Viegas Cardoso': [],
       'Turno Noite - Escola Estadual de Educação Básica Júlio César Ribeiro de Souza': [],
       'Turno Noite - E.M.E.F. Professor Juliano Nascimento': []
     };

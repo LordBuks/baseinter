@@ -236,16 +236,7 @@ const AddAthleteModal = ({ category, onClose }) => {
             </div>
 
             <div className="form-right">
-              <div className="form-group">
-                <label>Escola que Estuda</label>
-                <input
-                  type="text"
-                  name="school"
-                  value={formData.school}
-                  onChange={handleInputChange}
-                  placeholder="Nome da escola"
-                />
-              </div>
+              {/* Campo removido conforme solicitado */}
 
               <div className="form-group">
                 <label>Ano que Estuda</label>
@@ -261,38 +252,7 @@ const AddAthleteModal = ({ category, onClose }) => {
                 </select>
               </div>
 
-              <div className="form-group">
-                <label>Observações sobre o atleta</label>
-                <textarea
-                  name="observations"
-                  value={formData.observations}
-                  onChange={handleInputChange}
-                  placeholder="Observações gerais sobre o atleta..."
-                  rows={3}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Andamento escolar</label>
-                <textarea
-                  name="schoolProgress"
-                  value={formData.schoolProgress}
-                  onChange={handleInputChange}
-                  placeholder="Informações sobre o desempenho escolar..."
-                  rows={3}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Pontos a reforçar</label>
-                <textarea
-                  name="improvementPoints"
-                  value={formData.improvementPoints}
-                  onChange={handleInputChange}
-                  placeholder="Pontos que precisam ser trabalhados..."
-                  rows={3}
-                />
-              </div>
+              {/* Campos removidos conforme solicitado - aparecerão apenas na página de detalhes/edição */}
 
               <div className="evaluation-section">
                 <h3>Avaliação Inicial</h3>

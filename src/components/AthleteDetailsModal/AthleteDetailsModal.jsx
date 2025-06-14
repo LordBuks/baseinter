@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { X, Edit, Trash2, User, Calendar, MapPin, GraduationCap, School } from 'lucide-react';
+import { X, Edit, Trash2, User, Calendar, MapPin, GraduationCap, School, ArrowLeft, Save, Edit3 } from 'lucide-react';
 import { useAthletes } from '../../context/AthleteContext';
 import './AthleteDetailsModal.css';
 
 const AthleteDetailsModal = ({ athlete, category, onClose }) => {
   const { updateAthlete, deleteAthlete } = useAthletes();
   const [isEditing, setIsEditing] = useState(false);
+  const [editingField, setEditingField] = useState(null);
   const [editData, setEditData] = useState({
     ...athlete,
-    evaluation: athlete.evaluation || { comportamento: 5, compromisso: 5, escola: 5 }
+    evaluation: athlete.evaluation || { comportamento: 5, compromisso: 5, escola: 5 },
+    observations: athlete.observations || '',
+    schoolProgress: athlete.schoolProgress || '',
+    improvementPoints: athlete.improvementPoints || ''
   });
 
   const formatDate = (dateString) => {
@@ -42,15 +46,36 @@ const AthleteDetailsModal = ({ athlete, category, onClose }) => {
   };
 
   const handleSave = () => {
-    updateAthlete(category, athlete.id, editData);
+    updateAthlete(editData);
     setIsEditing(false);
+    setEditingField(null);
   };
 
   const handleDelete = () => {
     if (window.confirm('Tem certeza que deseja excluir este atleta?')) {
-      deleteAthlete(category, athlete.id);
+      deleteAthlete(athlete.id);
       onClose();
     }
+  };
+
+  const handleFieldEdit = (fieldName) => {
+    setEditingField(fieldName);
+  };
+
+  const handleFieldSave = (fieldName) => {
+    updateAthlete(editData);
+    setEditingField(null);
+  };
+
+  const handleFieldCancel = () => {
+    setEditData({
+      ...athlete,
+      evaluation: athlete.evaluation || { comportamento: 5, compromisso: 5, escola: 5 },
+      observations: athlete.observations || '',
+      schoolProgress: athlete.schoolProgress || '',
+      improvementPoints: athlete.improvementPoints || ''
+    });
+    setEditingField(null);
   };
 
   const positions = [
@@ -87,26 +112,21 @@ const AthleteDetailsModal = ({ athlete, category, onClose }) => {
           </div>
           
           <div className="header-actions">
-            {!isEditing ? (
-              <>
-                <button className="edit-btn btn-3d" onClick={() => setIsEditing(true)}>
-                  <Edit size={16} />
-                  Editar
-                </button>
-                <button className="delete-btn" onClick={handleDelete}>
-                  <Trash2 size={16} />
-                </button>
-              </>
-            ) : (
-              <>
-                <button className="save-btn btn-3d" onClick={handleSave}>
-                  Salvar
-                </button>
-                <button className="cancel-edit-btn" onClick={() => setIsEditing(false)}>
-                  Cancelar
-                </button>
-              </>
-            )}
+            <button className="back-btn btn-elegant-back" onClick={onClose}>
+              <ArrowLeft size={16} />
+              Voltar
+            </button>
+            
+            <button className="edit-btn btn-elegant-green" onClick={() => setIsEditing(true)}>
+              <Edit size={16} />
+              Editar
+            </button>
+            
+            <button className="delete-btn btn-elegant-yellow" onClick={handleDelete}>
+              <Trash2 size={16} />
+              Deletar
+            </button>
+            
             <button className="close-button" onClick={onClose}>
               <X size={24} />
             </button>
@@ -192,20 +212,6 @@ const AthleteDetailsModal = ({ athlete, category, onClose }) => {
               
               <div className="info-grid">
                 <div className="info-item">
-                  <label>Escola</label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      name="school"
-                      value={editData.school || ''}
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    <span>{athlete.school || 'Não informado'}</span>
-                  )}
-                </div>
-
-                <div className="info-item">
                   <label>Ano Escolar</label>
                   {isEditing ? (
                     <select
@@ -236,6 +242,146 @@ const AthleteDetailsModal = ({ athlete, category, onClose }) => {
                     <span>{formatDate(athlete.admissionDate)}</span>
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="additional-info-section">
+            {/* Observações sobre o atleta */}
+            <div className="info-card-editable">
+              <div className="info-card-header">
+                <h4>Observações sobre o atleta</h4>
+                <div className="card-actions">
+                  {editingField === 'observations' ? (
+                    <>
+                      <button 
+                        className="save-field-btn"
+                        onClick={() => handleFieldSave('observations')}
+                      >
+                        <Save size={14} />
+                      </button>
+                      <button 
+                        className="cancel-field-btn"
+                        onClick={handleFieldCancel}
+                      >
+                        <X size={14} />
+                      </button>
+                    </>
+                  ) : (
+                    <button 
+                      className="edit-field-btn"
+                      onClick={() => handleFieldEdit('observations')}
+                    >
+                      <Edit3 size={14} />
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="info-card-content">
+                {editingField === 'observations' ? (
+                  <textarea
+                    name="observations"
+                    value={editData.observations}
+                    onChange={handleInputChange}
+                    placeholder="Observações sobre o atleta..."
+                    rows={4}
+                    autoFocus
+                  />
+                ) : (
+                  <p>{athlete.observations || 'Nenhuma observação registrada'}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Andamento escolar */}
+            <div className="info-card-editable">
+              <div className="info-card-header">
+                <h4>Andamento escolar</h4>
+                <div className="card-actions">
+                  {editingField === 'schoolProgress' ? (
+                    <>
+                      <button 
+                        className="save-field-btn"
+                        onClick={() => handleFieldSave('schoolProgress')}
+                      >
+                        <Save size={14} />
+                      </button>
+                      <button 
+                        className="cancel-field-btn"
+                        onClick={handleFieldCancel}
+                      >
+                        <X size={14} />
+                      </button>
+                    </>
+                  ) : (
+                    <button 
+                      className="edit-field-btn"
+                      onClick={() => handleFieldEdit('schoolProgress')}
+                    >
+                      <Edit3 size={14} />
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="info-card-content">
+                {editingField === 'schoolProgress' ? (
+                  <textarea
+                    name="schoolProgress"
+                    value={editData.schoolProgress}
+                    onChange={handleInputChange}
+                    placeholder="Informações sobre o andamento escolar..."
+                    rows={4}
+                    autoFocus
+                  />
+                ) : (
+                  <p>{athlete.schoolProgress || 'Nenhuma informação sobre andamento escolar'}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Pontos a reforçar */}
+            <div className="info-card-editable">
+              <div className="info-card-header">
+                <h4>Pontos a reforçar</h4>
+                <div className="card-actions">
+                  {editingField === 'improvementPoints' ? (
+                    <>
+                      <button 
+                        className="save-field-btn"
+                        onClick={() => handleFieldSave('improvementPoints')}
+                      >
+                        <Save size={14} />
+                      </button>
+                      <button 
+                        className="cancel-field-btn"
+                        onClick={handleFieldCancel}
+                      >
+                        <X size={14} />
+                      </button>
+                    </>
+                  ) : (
+                    <button 
+                      className="edit-field-btn"
+                      onClick={() => handleFieldEdit('improvementPoints')}
+                    >
+                      <Edit3 size={14} />
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="info-card-content">
+                {editingField === 'improvementPoints' ? (
+                  <textarea
+                    name="improvementPoints"
+                    value={editData.improvementPoints}
+                    onChange={handleInputChange}
+                    placeholder="Pontos que precisam ser reforçados..."
+                    rows={4}
+                    autoFocus
+                  />
+                ) : (
+                  <p>{athlete.improvementPoints || 'Nenhum ponto específico a reforçar'}</p>
+                )}
               </div>
             </div>
           </div>
@@ -311,6 +457,17 @@ const AthleteDetailsModal = ({ athlete, category, onClose }) => {
               </div>
             </div>
           </div>
+
+          {isEditing && (
+            <div className="form-actions">
+              <button className="cancel-edit-btn" onClick={() => setIsEditing(false)}>
+                Cancelar
+              </button>
+              <button className="save-btn btn-elegant-save" onClick={handleSave}>
+                Salvar Alterações
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
